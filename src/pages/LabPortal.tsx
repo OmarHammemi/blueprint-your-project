@@ -3,55 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Shield, UserCheck, Upload, BarChart3, CheckCircle2, Clock, Search, FileUp,
-  TrendingUp, TrendingDown, Activity, FlaskConical, Calendar, Users, 
-  AlertTriangle, ArrowUpRight, ArrowDownRight
+  Shield, UserCheck, Upload, BarChart3, Clock, Search, FileUp,
+  TrendingUp, Activity, FlaskConical, Users, GitBranch
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
-} from "recharts";
 
-// Mock data for charts
-const processingTrendData = [
-  { date: "Jan 26", samples: 45, verified: 42 },
-  { date: "Jan 27", samples: 52, verified: 48 },
-  { date: "Jan 28", samples: 38, verified: 35 },
-  { date: "Jan 29", samples: 65, verified: 61 },
-  { date: "Jan 30", samples: 72, verified: 68 },
-  { date: "Jan 31", samples: 58, verified: 55 },
-  { date: "Feb 01", samples: 89, verified: 82 },
-  { date: "Feb 02", samples: 76, verified: 71 },
-];
-
-const testTypeData = [
-  { name: "Blood Panel", value: 420, color: "hsl(174, 72%, 40%)" },
-  { name: "Genetic Screening", value: 280, color: "hsl(215, 50%, 23%)" },
-  { name: "Oncology Markers", value: 180, color: "hsl(38, 92%, 50%)" },
-  { name: "Hormone Panel", value: 150, color: "hsl(280, 60%, 50%)" },
-  { name: "Other", value: 97, color: "hsl(200, 50%, 50%)" },
-];
-
-const hourlyActivityData = [
-  { hour: "6AM", activity: 12 },
-  { hour: "8AM", activity: 45 },
-  { hour: "10AM", activity: 78 },
-  { hour: "12PM", activity: 52 },
-  { hour: "2PM", activity: 85 },
-  { hour: "4PM", activity: 67 },
-  { hour: "6PM", activity: 34 },
-  { hour: "8PM", activity: 18 },
-];
-
-const weeklyComparisonData = [
-  { week: "Week 1", current: 320, previous: 280 },
-  { week: "Week 2", current: 380, previous: 310 },
-  { week: "Week 3", current: 420, previous: 350 },
-  { week: "Week 4", current: 495, previous: 420 },
-];
+// Import refactored components
+import StatCard from "@/components/lab/StatCard";
+import AnalyticsCharts from "@/components/lab/AnalyticsCharts";
+import ValidationsTable from "@/components/lab/ValidationsTable";
+import SamplePipeline from "@/components/lab/SamplePipeline";
 
 const mockValidations = [
   { id: "VAL-001", date: "2026-02-02 14:32", status: "verified", sampleCode: "BLD-7829", testType: "Blood Panel", turnaround: "18h" },
@@ -75,52 +38,10 @@ const mockStats = {
 };
 
 const LabPortal = () => {
-  const [activeTab, setActiveTab] = useState<"verify" | "upload" | "dashboard">("dashboard");
+  const [activeTab, setActiveTab] = useState<"verify" | "upload" | "dashboard" | "pipeline">("dashboard");
   const [validationId, setValidationId] = useState("");
   const [analyticsView, setAnalyticsView] = useState<"overview" | "trends" | "distribution">("overview");
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "verified":
-        return <Badge className="bg-accent/10 text-accent border-accent/20"><CheckCircle2 className="w-3 h-3 mr-1" /> Verified</Badge>;
-      case "pending":
-        return <Badge className="bg-amber/10 text-amber border-amber/20"><Clock className="w-3 h-3 mr-1" /> Pending</Badge>;
-      case "failed":
-        return <Badge className="bg-destructive/10 text-destructive border-destructive/20"><AlertTriangle className="w-3 h-3 mr-1" /> Failed</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
-
-  const StatCard = ({ title, value, change, icon: Icon, suffix = "" }: { 
-    title: string; 
-    value: string | number; 
-    change?: number; 
-    icon: any;
-    suffix?: string;
-  }) => (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="text-sm text-muted-foreground">{title}</div>
-            <div className="text-3xl font-bold text-foreground mt-1">
-              {typeof value === 'number' ? value.toLocaleString() : value}{suffix}
-            </div>
-            {change !== undefined && (
-              <div className={`flex items-center gap-1 mt-2 text-sm ${change >= 0 ? 'text-accent' : 'text-destructive'}`}>
-                {change >= 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
-                <span>{Math.abs(change)}% vs last week</span>
-              </div>
-            )}
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-            <Icon className="w-6 h-6 text-accent" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  const [pipelineView, setPipelineView] = useState<"kanban" | "list">("kanban");
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,6 +90,17 @@ const LabPortal = () => {
                   >
                     <BarChart3 className="w-5 h-5" />
                     Analytics
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("pipeline")}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeTab === "pipeline"
+                        ? "bg-accent text-white"
+                        : "hover:bg-navy-light text-white/70"
+                    }`}
+                  >
+                    <GitBranch className="w-5 h-5" />
+                    Sample Pipeline
                   </button>
                   <button
                     onClick={() => setActiveTab("verify")}
@@ -265,232 +197,32 @@ const LabPortal = () => {
                   />
                 </div>
 
-                {/* Analytics Tabs */}
-                <Card>
-                  <CardHeader>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div>
-                        <CardTitle>Processing Analytics</CardTitle>
-                        <CardDescription>Real-time insights into sample processing</CardDescription>
-                      </div>
-                      <Tabs value={analyticsView} onValueChange={(v) => setAnalyticsView(v as any)}>
-                        <TabsList>
-                          <TabsTrigger value="overview">Overview</TabsTrigger>
-                          <TabsTrigger value="trends">Trends</TabsTrigger>
-                          <TabsTrigger value="distribution">Distribution</TabsTrigger>
-                        </TabsList>
-                      </Tabs>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {analyticsView === "overview" && (
-                      <div className="grid lg:grid-cols-2 gap-6">
-                        {/* Processing Trend */}
-                        <div>
-                          <h4 className="font-semibold text-sm mb-4">Sample Processing Trend</h4>
-                          <ResponsiveContainer width="100%" height={250}>
-                            <AreaChart data={processingTrendData}>
-                              <defs>
-                                <linearGradient id="colorSamples" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="hsl(174, 72%, 40%)" stopOpacity={0.3}/>
-                                  <stop offset="95%" stopColor="hsl(174, 72%, 40%)" stopOpacity={0}/>
-                                </linearGradient>
-                                <linearGradient id="colorVerified" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="hsl(215, 50%, 23%)" stopOpacity={0.3}/>
-                                  <stop offset="95%" stopColor="hsl(215, 50%, 23%)" stopOpacity={0}/>
-                                </linearGradient>
-                              </defs>
-                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                              <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <Tooltip 
-                                contentStyle={{ 
-                                  backgroundColor: 'hsl(var(--card))', 
-                                  border: '1px solid hsl(var(--border))',
-                                  borderRadius: '8px'
-                                }} 
-                              />
-                              <Area type="monotone" dataKey="samples" stroke="hsl(174, 72%, 40%)" fillOpacity={1} fill="url(#colorSamples)" strokeWidth={2} />
-                              <Area type="monotone" dataKey="verified" stroke="hsl(215, 50%, 23%)" fillOpacity={1} fill="url(#colorVerified)" strokeWidth={2} />
-                            </AreaChart>
-                          </ResponsiveContainer>
-                        </div>
-
-                        {/* Test Type Distribution */}
-                        <div>
-                          <h4 className="font-semibold text-sm mb-4">Test Type Distribution</h4>
-                          <ResponsiveContainer width="100%" height={250}>
-                            <PieChart>
-                              <Pie
-                                data={testTypeData}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={100}
-                                paddingAngle={2}
-                                dataKey="value"
-                              >
-                                {testTypeData.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                              </Pie>
-                              <Tooltip 
-                                contentStyle={{ 
-                                  backgroundColor: 'hsl(var(--card))', 
-                                  border: '1px solid hsl(var(--border))',
-                                  borderRadius: '8px'
-                                }} 
-                              />
-                            </PieChart>
-                          </ResponsiveContainer>
-                          <div className="flex flex-wrap gap-3 justify-center mt-4">
-                            {testTypeData.map((item) => (
-                              <div key={item.name} className="flex items-center gap-2 text-xs">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="text-muted-foreground">{item.name}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {analyticsView === "trends" && (
-                      <div className="grid lg:grid-cols-2 gap-6">
-                        {/* Weekly Comparison */}
-                        <div>
-                          <h4 className="font-semibold text-sm mb-4">Weekly Comparison</h4>
-                          <ResponsiveContainer width="100%" height={250}>
-                            <BarChart data={weeklyComparisonData}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                              <XAxis dataKey="week" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <Tooltip 
-                                contentStyle={{ 
-                                  backgroundColor: 'hsl(var(--card))', 
-                                  border: '1px solid hsl(var(--border))',
-                                  borderRadius: '8px'
-                                }} 
-                              />
-                              <Legend />
-                              <Bar dataKey="previous" name="Previous Month" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} />
-                              <Bar dataKey="current" name="Current Month" fill="hsl(174, 72%, 40%)" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-
-                        {/* Hourly Activity */}
-                        <div>
-                          <h4 className="font-semibold text-sm mb-4">Hourly Activity Pattern</h4>
-                          <ResponsiveContainer width="100%" height={250}>
-                            <LineChart data={hourlyActivityData}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                              <XAxis dataKey="hour" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                              <Tooltip 
-                                contentStyle={{ 
-                                  backgroundColor: 'hsl(var(--card))', 
-                                  border: '1px solid hsl(var(--border))',
-                                  borderRadius: '8px'
-                                }} 
-                              />
-                              <Line 
-                                type="monotone" 
-                                dataKey="activity" 
-                                stroke="hsl(215, 50%, 23%)" 
-                                strokeWidth={3}
-                                dot={{ fill: 'hsl(215, 50%, 23%)', strokeWidth: 2 }}
-                                activeDot={{ r: 6, fill: 'hsl(174, 72%, 40%)' }}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    )}
-
-                    {analyticsView === "distribution" && (
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="font-semibold text-sm mb-4">Test Type Breakdown</h4>
-                          <div className="space-y-4">
-                            {testTypeData.map((item) => (
-                              <div key={item.name} className="space-y-2">
-                                <div className="flex items-center justify-between text-sm">
-                                  <span className="font-medium">{item.name}</span>
-                                  <span className="text-muted-foreground">{item.value} samples ({Math.round(item.value / testTypeData.reduce((a, b) => a + b.value, 0) * 100)}%)</span>
-                                </div>
-                                <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
-                                  <div 
-                                    className="h-full rounded-full transition-all duration-500" 
-                                    style={{ 
-                                      width: `${(item.value / testTypeData.reduce((a, b) => a + b.value, 0)) * 100}%`,
-                                      backgroundColor: item.color
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                {/* Analytics Charts */}
+                <AnalyticsCharts 
+                  view={analyticsView} 
+                  onViewChange={setAnalyticsView} 
+                />
 
                 {/* Recent Validations */}
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle>Recent Validations</CardTitle>
-                        <CardDescription>Latest sample verification activities</CardDescription>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        View All
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-border">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Validation ID</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Sample Code</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Test Type</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date/Time</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Turnaround</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {mockValidations.map((val) => (
-                            <tr key={val.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                              <td className="py-3 px-4">
-                                <span className="font-mono text-sm font-medium">{val.id}</span>
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="font-mono text-sm text-muted-foreground">{val.sampleCode}</span>
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="text-sm">{val.testType}</span>
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="text-sm text-muted-foreground">{val.date}</span>
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="text-sm font-medium">{val.turnaround}</span>
-                              </td>
-                              <td className="py-3 px-4">{getStatusBadge(val.status)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ValidationsTable validations={mockValidations} />
               </>
+            )}
+
+            {activeTab === "pipeline" && (
+              <div className="space-y-6">
+                {/* View Toggle */}
+                <div className="flex justify-end">
+                  <Tabs value={pipelineView} onValueChange={(v) => setPipelineView(v as "kanban" | "list")}>
+                    <TabsList>
+                      <TabsTrigger value="kanban">Kanban View</TabsTrigger>
+                      <TabsTrigger value="list">List View</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
+                
+                {/* Sample Pipeline */}
+                <SamplePipeline view={pipelineView} />
+              </div>
             )}
 
             {activeTab === "verify" && (
