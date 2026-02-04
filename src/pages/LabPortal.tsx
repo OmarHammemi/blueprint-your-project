@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Shield, UserCheck, Upload, BarChart3, Clock, Search, FileUp,
-  TrendingUp, Activity, FlaskConical, Users, GitBranch
+  TrendingUp, Activity, FlaskConical, Users, GitBranch, Settings, Moon, Sun
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTheme } from "@/hooks/use-theme";
 
 // Import refactored components
 import StatCard from "@/components/lab/StatCard";
@@ -42,6 +43,7 @@ const LabPortal = () => {
   const [validationId, setValidationId] = useState("");
   const [analyticsView, setAnalyticsView] = useState<"overview" | "trends" | "distribution">("overview");
   const [pipelineView, setPipelineView] = useState<"kanban" | "list">("kanban");
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,12 +58,25 @@ const LabPortal = () => {
               <span className="text-xl font-bold">Blindedata</span>
               <Badge className="ml-2 bg-white/20 text-white border-white/30">Lab Portal</Badge>
             </Link>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 text-sm text-white/70">
+            <div className="flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2 text-sm text-white/70 mr-4">
                 <Activity className="w-4 h-4" />
                 <span>System Online</span>
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-white hover:bg-white/10"
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              >
+                {resolvedTheme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+              <Link to="/settings">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+                  <Settings className="w-4 h-4" />
+                </Button>
+              </Link>
               <Link to="/">
                 <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">Back to Home</Button>
               </Link>
