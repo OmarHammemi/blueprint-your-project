@@ -2,7 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  ComposedChart, ScatterChart, Scatter, ZAxis,
 } from "recharts";
 
 // Mock data for charts
@@ -18,11 +20,11 @@ const processingTrendData = [
 ];
 
 const testTypeData = [
-  { name: "Blood Panel", value: 420, color: "hsl(174, 72%, 40%)" },
-  { name: "Genetic Screening", value: 280, color: "hsl(215, 50%, 23%)" },
-  { name: "Oncology Markers", value: 180, color: "hsl(38, 92%, 50%)" },
+  { name: "Blood Panel", value: 420, color: "hsl(160, 84%, 44%)" },
+  { name: "Genetic Screening", value: 280, color: "hsl(200, 80%, 55%)" },
+  { name: "Oncology Markers", value: 180, color: "hsl(32, 95%, 55%)" },
   { name: "Hormone Panel", value: 150, color: "hsl(280, 60%, 50%)" },
-  { name: "Other", value: 97, color: "hsl(200, 50%, 50%)" },
+  { name: "Other", value: 97, color: "hsl(220, 16%, 14%)" },
 ];
 
 const hourlyActivityData = [
@@ -43,18 +45,51 @@ const weeklyComparisonData = [
   { week: "Week 4", current: 495, previous: 420 },
 ];
 
+const qualityMetricsData = [
+  { metric: "Accuracy", score: 96 },
+  { metric: "Speed", score: 88 },
+  { metric: "Compliance", score: 99 },
+  { metric: "Documentation", score: 91 },
+  { metric: "Consistency", score: 94 },
+  { metric: "Chain of Custody", score: 97 },
+];
+
+const slaComplianceData = [
+  { week: "Week 1", onTime: 92, target: 95, volume: 320 },
+  { week: "Week 2", onTime: 94, target: 95, volume: 380 },
+  { week: "Week 3", onTime: 97, target: 95, volume: 420 },
+  { week: "Week 4", onTime: 98, target: 95, volume: 495 },
+];
+
+const turnaroundByTypeData = [
+  { type: "Blood Panel", avgHours: 18, samples: 420 },
+  { type: "Genetic", avgHours: 26, samples: 280 },
+  { type: "Oncology", avgHours: 34, samples: 180 },
+  { type: "Hormone", avgHours: 22, samples: 150 },
+  { type: "Other", avgHours: 20, samples: 97 },
+];
+
+const throughputVsAccuracyData = [
+  { technician: "Tech A", throughput: 62, accuracy: 98 },
+  { technician: "Tech B", throughput: 78, accuracy: 95 },
+  { technician: "Tech C", throughput: 45, accuracy: 99 },
+  { technician: "Tech D", throughput: 90, accuracy: 92 },
+  { technician: "Tech E", throughput: 55, accuracy: 97 },
+  { technician: "Tech F", throughput: 71, accuracy: 96 },
+];
+
 interface AnalyticsChartsProps {
-  view: "overview" | "trends" | "distribution";
-  onViewChange: (view: "overview" | "trends" | "distribution") => void;
+  view: "overview" | "trends" | "distribution" | "performance";
+  onViewChange: (view: "overview" | "trends" | "distribution" | "performance") => void;
 }
 
 const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
   return (
-    <Card>
+    <Card className="border-gradient">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <CardTitle>Processing Analytics</CardTitle>
+            <CardTitle className="font-display">Processing Analytics</CardTitle>
             <CardDescription>Real-time insights into sample processing</CardDescription>
           </div>
           <Tabs value={view} onValueChange={(v) => onViewChange(v as any)}>
@@ -62,6 +97,7 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="trends">Trends</TabsTrigger>
               <TabsTrigger value="distribution">Distribution</TabsTrigger>
+              <TabsTrigger value="performance">Performance</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -76,12 +112,12 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
                 <AreaChart data={processingTrendData}>
                   <defs>
                     <linearGradient id="colorSamples" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(174, 72%, 40%)" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="hsl(174, 72%, 40%)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="hsl(160, 84%, 44%)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(160, 84%, 44%)" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorVerified" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(215, 50%, 23%)" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="hsl(215, 50%, 23%)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="hsl(200, 80%, 55%)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(200, 80%, 55%)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -94,8 +130,8 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
                       borderRadius: '8px'
                     }} 
                   />
-                  <Area type="monotone" dataKey="samples" stroke="hsl(174, 72%, 40%)" fillOpacity={1} fill="url(#colorSamples)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="verified" stroke="hsl(215, 50%, 23%)" fillOpacity={1} fill="url(#colorVerified)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="samples" stroke="hsl(160, 84%, 44%)" fillOpacity={1} fill="url(#colorSamples)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="verified" stroke="hsl(200, 80%, 55%)" fillOpacity={1} fill="url(#colorVerified)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -158,7 +194,7 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
                   />
                   <Legend />
                   <Bar dataKey="previous" name="Previous Month" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="current" name="Current Month" fill="hsl(174, 72%, 40%)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="current" name="Current Month" fill="hsl(160, 84%, 44%)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -181,10 +217,10 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
                   <Line 
                     type="monotone" 
                     dataKey="activity" 
-                    stroke="hsl(215, 50%, 23%)" 
+                    stroke="hsl(200, 80%, 55%)" 
                     strokeWidth={3}
-                    dot={{ fill: 'hsl(215, 50%, 23%)', strokeWidth: 2 }}
-                    activeDot={{ r: 6, fill: 'hsl(174, 72%, 40%)' }}
+                    dot={{ fill: 'hsl(200, 80%, 55%)', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: 'hsl(160, 84%, 44%)' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -214,6 +250,121 @@ const AnalyticsCharts = ({ view, onViewChange }: AnalyticsChartsProps) => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {view === "performance" && (
+          <div className="space-y-6">
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Quality Metrics Radar */}
+              <div>
+                <h4 className="font-semibold text-sm mb-4">Quality Metrics Radar</h4>
+                <ResponsiveContainer width="100%" height={280}>
+                  <RadarChart data={qualityMetricsData} outerRadius={95}>
+                    <PolarGrid stroke="hsl(var(--border))" />
+                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                    <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                    <Radar
+                      name="Quality Score"
+                      dataKey="score"
+                      stroke="hsl(160, 84%, 44%)"
+                      fill="hsl(160, 84%, 44%)"
+                      fillOpacity={0.35}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* SLA Compliance */}
+              <div>
+                <h4 className="font-semibold text-sm mb-4">SLA Compliance vs Target</h4>
+                <ResponsiveContainer width="100%" height={280}>
+                  <ComposedChart data={slaComplianceData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="week" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis yAxisId="left" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" domain={[80, 100]} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar yAxisId="right" dataKey="volume" name="Sample Volume" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} />
+                    <Line yAxisId="left" type="monotone" dataKey="onTime" name="On-Time %" stroke="hsl(160, 84%, 44%)" strokeWidth={3} dot={{ r: 4 }} />
+                    <Line yAxisId="left" type="monotone" dataKey="target" name="Target %" stroke="hsl(32, 95%, 55%)" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Turnaround Time by Test Type */}
+              <div>
+                <h4 className="font-semibold text-sm mb-4">Avg. Turnaround Time by Test Type</h4>
+                <ResponsiveContainer width="100%" height={260}>
+                  <BarChart data={turnaroundByTypeData} layout="vertical" margin={{ left: 16 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis type="number" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" unit="h" />
+                    <YAxis type="category" dataKey="type" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" width={90} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Bar dataKey="avgHours" name="Avg Hours" fill="hsl(200, 80%, 55%)" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Throughput vs Accuracy */}
+              <div>
+                <h4 className="font-semibold text-sm mb-4">Technician Throughput vs Accuracy</h4>
+                <ResponsiveContainer width="100%" height={260}>
+                  <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis
+                      type="number"
+                      dataKey="throughput"
+                      name="Throughput"
+                      unit=" samples/day"
+                      tick={{ fontSize: 12 }}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <YAxis
+                      type="number"
+                      dataKey="accuracy"
+                      name="Accuracy"
+                      unit="%"
+                      domain={[85, 100]}
+                      tick={{ fontSize: 12 }}
+                      stroke="hsl(var(--muted-foreground))"
+                    />
+                    <ZAxis range={[120, 120]} />
+                    <Tooltip
+                      cursor={{ strokeDasharray: "3 3" }}
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Scatter name="Technicians" data={throughputVsAccuracyData} fill="hsl(280, 60%, 50%)" />
+                  </ScatterChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>

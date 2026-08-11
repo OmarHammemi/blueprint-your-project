@@ -1,87 +1,71 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.jpg";
+import { CalendarClock, LogIn, ArrowDown } from "lucide-react";
+import BookDemoDialog from "@/components/landing/BookDemoDialog";
+import SignInDialog from "@/components/landing/SignInDialog";
 
 const Hero = () => {
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-navy/70" />
+    <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-hero overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl animate-pulse-glow" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/5 blur-3xl animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
       </div>
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 z-10 pattern-grid opacity-30" />
-
-      {/* Content */}
-      <div className="container relative z-20 mx-auto px-4 pt-20">
+      <div className="container relative z-10 px-6 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 border border-accent/30 text-teal-light mb-8 animate-fade-in">
-            <Shield className="w-4 h-4" />
-            <span className="text-sm font-medium">Privacy-First Healthcare Technology</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 mb-8">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium text-primary">Native Dissociation</span>
           </div>
 
-          {/* Main Heading */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-slide-up">
-            Your Identity and Your
-            <span className="block mt-2 text-teal"> Medical Data Never Meet</span>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
+            <span className="text-foreground">Your Identity and Your</span>
+            <br />
+            <span className="text-gradient-primary">Medical Data Never Meet</span>
           </h1>
 
-          {/* Subheading */}
-          <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            Blindedata uses Native Dissociation to cryptographically separate your personal identity from your medical samples — making it <strong className="text-white">technologically impossible</strong> for labs to link your data.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
+            Identity and consent travel through one flow — sample identifiers and health data through a separate, blinded flow.
+          </p>
+          <p className="text-base text-muted-foreground/70 max-w-xl mx-auto mb-10">
+            Privacy is enforced by architecture, not policy alone. The provider never receives the identity-to-sample association in the first place.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            <Link to="/patient">
-              <Button variant="hero" size="xl" className="group">
-                Get Started as Patient
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link to="/lab">
-              <Button variant="hero-outline" size="xl">
-                <Lock className="w-5 h-5" />
-                Lab Portal Access
-              </Button>
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              variant="hero"
+              size="lg"
+              className="text-base px-8"
+              onClick={() => setIsSignInOpen(true)}
+            >
+              <LogIn className="mr-2 h-4 w-4" /> Sign In
+            </Button>
+            <Button
+              variant="hero-outline"
+              size="lg"
+              className="text-base px-8"
+              onClick={() => setIsDemoOpen(true)}
+            >
+              <CalendarClock className="mr-2 h-4 w-4" /> Book a Demo
+            </Button>
           </div>
 
-          {/* Trust indicators */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal">100%</div>
-              <div className="text-sm text-white/60">Client-Side Encryption</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal">HIPAA</div>
-              <div className="text-sm text-white/60">Compliant</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal">Zero</div>
-              <div className="text-sm text-white/60">Identity Exposure</div>
-            </div>
-          </div>
+          <a
+            href="#how-it-works"
+            className="inline-flex items-center gap-2 mt-14 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            See how BlindData works
+            <ArrowDown className="w-4 h-4" />
+          </a>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
-          <div className="w-1.5 h-3 bg-white/50 rounded-full" />
-        </div>
-      </div>
+      <SignInDialog open={isSignInOpen} onOpenChange={setIsSignInOpen} />
+      <BookDemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
     </section>
   );
 };

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/hooks/use-theme";
 import Index from "./pages/Index";
+import ChoosePortal from "./pages/ChoosePortal";
 import PatientPortal from "./pages/PatientPortal";
 import LabPortal from "./pages/LabPortal";
 import Settings from "./pages/Settings";
@@ -14,13 +15,14 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="system" storageKey="blindedata-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="blindedata-ui-theme">
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/choose" element={<ChoosePortal />} />
             <Route path="/patient" element={<PatientPortal />} />
             <Route path="/lab" element={<LabPortal />} />
             <Route path="/settings" element={<Settings />} />

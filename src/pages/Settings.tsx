@@ -69,7 +69,7 @@ const Settings = () => {
               <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
                 <Shield className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">Blindedata</span>
+              <span className="text-xl font-bold">BlindData</span>
               <Badge className="ml-2 bg-white/20 text-white border-white/30">Settings</Badge>
             </Link>
             <Link to="/">
@@ -218,7 +218,7 @@ const Settings = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Theme Settings</CardTitle>
-                <CardDescription>Customize how Blindedata looks on your device</CardDescription>
+                <CardDescription>Customize how BlindData looks on your device</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Theme Selection */}

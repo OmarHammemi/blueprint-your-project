@@ -1,86 +1,87 @@
-import { User, FlaskConical, ShieldCheck, FileCheck } from "lucide-react";
-import nativeDissociationImg from "@/assets/native-dissociation.jpg";
+import { User, Split, ShieldCheck, FlaskConical, FileCheck, ArrowRight } from "lucide-react";
 
 const steps = [
   {
     icon: User,
-    title: "Register Your Kit",
-    description: "Patient securely registers their test kit through our portal. Personal identity is verified but never linked to samples.",
-    color: "bg-amber",
+    title: "Identity & Consent",
+    description:
+      "Patient provides identity, privacy consent, and informed medical consent on a dedicated channel — never bundled with sample or health data.",
+    detail: "Consent and identity stay on the plaintext flow.",
   },
   {
-    icon: FlaskConical,
-    title: "Sample Processing",
-    description: "Lab receives blinded samples with cryptographic validation IDs. They know the data is authentic but can't identify the patient.",
-    color: "bg-teal",
+    icon: Split,
+    title: "Native Dissociation",
+    description:
+      "The architecture separates identity from sample identifiers before data reaches the lab. The provider does not receive the association in the first place.",
+    detail: "Dissociation happens by design, not after the fact.",
   },
   {
     icon: ShieldCheck,
-    title: "Blind Verification",
-    description: "Third-party service provides RSA blind signatures, mathematically proving data integrity without identity linkage.",
-    color: "bg-navy-light",
+    title: "Authorization",
+    description:
+      "The protocol verifies required consents are valid without revealing the identity-to-sample link. Valid consent enables processing; missing consent blocks it.",
+    detail: "Authorization proofs cover authenticity and integrity — unlinkability comes from the architecture.",
+  },
+  {
+    icon: FlaskConical,
+    title: "Lab Processing",
+    description:
+      "Lab receives blinded samples with validation IDs. It can confirm a sample is authorized for processing while remaining unable to see patient identity.",
+    detail: "Labs process dissociated data only.",
   },
   {
     icon: FileCheck,
-    title: "Anonymous Retrieval",
-    description: "Patient retrieves their results using their private key. Only they can decrypt and view their medical data.",
-    color: "bg-accent",
+    title: "Result Delivery",
+    description:
+      "Results return through the blinded channel. The patient retrieves them via their portal — identity was never part of the lab workflow.",
+    detail: "Results reach the patient without re-linking identity at the provider.",
   },
 ];
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-24 bg-background relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-accent font-semibold text-sm uppercase tracking-wider">Native Dissociation</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
-            How We Protect Your Privacy
+    <section id="how-it-works" className="py-24 px-6 bg-surface-elevated">
+      <div className="container max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+            How <span className="text-gradient-primary">It Works</span>
           </h2>
-          <p className="text-muted-foreground text-lg">
-            Your identity and medical data flow through two completely separate, cryptographically secured channels that can never be linked.
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Identity and consent travel one path; blinded sample identifiers and health data travel another — from kit registration through authorized lab processing to result delivery.
           </p>
         </div>
 
-        {/* Visual Diagram */}
-        <div className="mb-20 rounded-2xl overflow-hidden shadow-xl max-w-4xl mx-auto glow-border">
-          <img
-            src={nativeDissociationImg}
-            alt="Native Dissociation - Two separate data streams"
-            className="w-full h-auto"
-          />
-        </div>
-
-        {/* Steps */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
           {steps.map((step, index) => (
             <div
               key={step.title}
-              className="relative group"
+              className={`relative rounded-2xl p-6 bg-card border border-border ${
+                index === 2 ? "border-gradient glow-primary" : ""
+              }`}
             >
-              {/* Connector line */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-border -z-10" />
-              )}
-
-              <div className="bg-card rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-border/50 h-full">
-                {/* Step number */}
-                <div className="text-xs font-bold text-muted-foreground mb-4">
-                  STEP {String(index + 1).padStart(2, "0")}
-                </div>
-
-                {/* Icon */}
-                <div className={`w-12 h-12 rounded-xl ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <step.icon className="w-6 h-6 text-white" />
-                </div>
-
-                {/* Content */}
-                <h3 className="text-lg font-bold text-foreground mb-2">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
+              <div className="text-xs font-bold text-muted-foreground mb-4">
+                STEP {String(index + 1).padStart(2, "0")}
               </div>
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <step.icon className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-display text-lg font-semibold mb-2 text-foreground">{step.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">{step.description}</p>
+              <p className="text-xs text-primary/80 font-medium">{step.detail}</p>
+              {index < steps.length - 1 && (
+                <ArrowRight className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/40 z-10" />
+              )}
             </div>
           ))}
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
+          <h3 className="font-display text-xl font-semibold mb-3 text-foreground">End-to-end workflow</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-4xl">
+            BlindData keeps identity verification, consent collection, native dissociation, authorization, and result delivery as independent steps.
+            Labs can verify that a sample is legitimately authorized for processing while remaining unable to see patient identity through the BlindData workflow —
+            so re-identification is not a policy choice, it is prevented by architecture.
+          </p>
         </div>
       </div>
     </section>

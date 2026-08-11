@@ -10,47 +10,47 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-// MVP 5-step Dual Flow Architecture stages
+// Native Dissociation dual-flow stages
 const dualFlowStages = [
   { 
     id: "registration", 
-    label: "Secure Registration", 
+    label: "Identity + Consents", 
     icon: UserCheck, 
-    description: "Patient registers kit via portal",
+    description: "Patient provides identity and required consents",
     flow: "plaintext",
-    detail: "Encrypted session established for identity verification"
+    detail: "Privacy consent and informed medical consent captured on the identity channel"
   },
   { 
-    id: "blinding", 
-    label: "Local Blinding", 
+    id: "dissociation", 
+    label: "Native Dissociation", 
     icon: Lock, 
-    description: "Data hidden on patient device",
+    description: "Identity separated from sample identifiers",
     flow: "transition",
-    detail: "Cryptographic blinding performed client-side before transmission"
+    detail: "Blinded sample code and validation ID created — association never sent to provider"
   },
   { 
-    id: "verification", 
-    label: "Verification", 
+    id: "authorization", 
+    label: "Authorization", 
     icon: Shield, 
-    description: "Third-party anonymous ID verification",
+    description: "Consent verified without revealing identity link",
     flow: "blinded",
-    detail: "Blind signature engine validates without seeing identity"
+    detail: "Protocol confirms required authorizations — processing blocked if consent is absent"
   },
   { 
     id: "processing", 
-    label: "Anonymous Processing", 
+    label: "Lab Processing", 
     icon: FlaskConical, 
-    description: "Lab processes blinded sample",
+    description: "Lab processes authorized blinded sample",
     flow: "blinded",
-    detail: "Lab sees only blinded code - no patient identity linked"
+    detail: "Lab sees validation ID and health data only — patient identity not in workflow"
   },
   { 
     id: "retrieval", 
-    label: "Report Retrieval", 
+    label: "Result Delivery", 
     icon: KeyRound, 
-    description: "Patient retrieves results anonymously",
+    description: "Patient retrieves results via portal",
     flow: "plaintext",
-    detail: "Only patient can unblind using their private key"
+    detail: "Results return through blinded channel to patient — no re-linking at provider"
   },
 ];
 
@@ -61,7 +61,7 @@ const pipelineStages = [
   { id: "transit", label: "In Transit", icon: Truck, description: "Blinded sample en route" },
   { id: "received", label: "Lab Received", icon: Building, description: "Sample arrived at lab" },
   { id: "processing", label: "Processing", icon: FlaskConical, description: "Analysis in progress" },
-  { id: "complete", label: "Results Ready", icon: FileCheck, description: "Encrypted & available" },
+  { id: "complete", label: "Results Ready", icon: FileCheck, description: "Available for patient retrieval" },
 ];
 
 // Mock samples at different stages
@@ -100,7 +100,17 @@ const mockPipelineSamples = [
     timeInStage: "Queued",
     isBlinded: true,
     progress: 50,
-    dualFlowStage: "verification"
+    dualFlowStage: "authorization"
+  },
+  { 
+    id: "BLD-1847", 
+    stage: "received", 
+    testType: "Blood Panel", 
+    timeInStage: "Blocked",
+    isBlinded: true,
+    progress: 50,
+    dualFlowStage: "authorization",
+    consentBlocked: true,
   },
   { 
     id: "HRM-2198", 
@@ -109,7 +119,7 @@ const mockPipelineSamples = [
     timeInStage: "Est. 2 days",
     isBlinded: true,
     progress: 35,
-    dualFlowStage: "blinding"
+    dualFlowStage: "dissociation"
   },
   { 
     id: "BLD-4829", 
@@ -118,7 +128,7 @@ const mockPipelineSamples = [
     timeInStage: "Awaiting shipment",
     isBlinded: true,
     progress: 20,
-    dualFlowStage: "blinding"
+    dualFlowStage: "dissociation"
   },
   { 
     id: "GEN-8821", 
@@ -204,7 +214,7 @@ const SamplePipeline = ({ view = "kanban" }: SamplePipelineProps) => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-accent" />
-                  <span className="text-sm font-medium">Cryptographic Separation</span>
+                  <span className="text-sm font-medium">Native Dissociation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-teal" />
@@ -291,11 +301,12 @@ const SamplePipeline = ({ view = "kanban" }: SamplePipelineProps) => {
                   <Fingerprint className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">Cryptographic Separation Guarantee</h4>
+                  <h4 className="font-semibold text-foreground mb-1">Native Dissociation by Design</h4>
                   <p className="text-sm text-muted-foreground">
-                    The lab processes verified data <span className="text-teal font-medium">without patient identity</span>. 
-                    Only the patient can link results back using their <span className="text-amber font-medium">private key</span> — 
-                    mathematically impossible for anyone else to make the connection.
+                    The lab processes <span className="text-teal font-medium">authorized, dissociated data</span> without patient identity.
+                    Consent is verified before processing is enabled — when authorization is missing, processing is{" "}
+                    <span className="text-destructive font-medium">blocked</span>.
+                    Unlinkability comes from the architecture, not post-hoc anonymization.
                   </p>
                 </div>
               </div>
@@ -378,7 +389,12 @@ const SamplePipeline = ({ view = "kanban" }: SamplePipelineProps) => {
 
                     {/* Blinded Status */}
                     <div className="flex items-center gap-2">
-                      {sample.isBlinded ? (
+                      {"consentBlocked" in sample && sample.consentBlocked ? (
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20">
+                          <EyeOff className="w-4 h-4 text-destructive" />
+                          <span className="text-xs font-medium text-destructive">Consent Blocked</span>
+                        </div>
+                      ) : sample.isBlinded ? (
                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal/10 border border-teal/20">
                           <EyeOff className="w-4 h-4 text-teal" />
                           <span className="text-xs font-medium text-teal">Blinded</span>

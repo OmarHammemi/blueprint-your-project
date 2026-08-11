@@ -16,10 +16,10 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent/10 hover:text-accent",
         link: "text-primary underline-offset-4 hover:underline",
         // Blindedata custom variants
-        hero: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg hover:shadow-xl hover:shadow-accent/25 font-bold",
-        "hero-outline": "border-2 border-accent-foreground/30 bg-transparent text-accent-foreground hover:bg-accent-foreground/10 font-bold",
-        teal: "bg-gradient-to-r from-teal to-teal-dark text-white hover:opacity-90 shadow-md hover:shadow-lg",
-        navy: "bg-navy text-white hover:bg-navy-light shadow-md",
+        hero: "bg-primary text-primary-foreground font-semibold glow-primary hover:bg-primary/90 transition-all duration-300",
+        "hero-outline": "border border-primary/40 text-primary hover:bg-primary/10 transition-all duration-300",
+        teal: "bg-primary text-primary-foreground hover:bg-primary/90",
+        navy: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       },
       size: {
         default: "h-10 px-4 py-2",
