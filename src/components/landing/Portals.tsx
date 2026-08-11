@@ -37,7 +37,7 @@ const Portals = () => {
             Three <span className="text-gradient-primary">Portals</span>, One Mission
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Each stakeholder has a dedicated interface designed for their specific workflow — patients, labs, and the blind verification service.
+            Each stakeholder has a dedicated interface — patients, labs, and the authorization verification layer.
           </p>
         </div>
 
