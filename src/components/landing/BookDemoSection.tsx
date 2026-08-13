@@ -14,7 +14,7 @@ const BookDemoSection = () => {
             Book a <span className="text-gradient-primary">Demo</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Choose a time that works for you. We&apos;ll walk through Native Dissociation — identity, consent, authorization, and blinded lab processing.
+            Choose a time that works for you. We&apos;ll walk through the two-phase BlindeData protocol — Phase One registration, BlindeData authorization, and blinded lab processing.
           </p>
         </div>
 

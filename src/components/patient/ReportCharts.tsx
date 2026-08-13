@@ -377,7 +377,7 @@ export const ReportsOverview = ({
                     <div>
                       <h4 className="font-semibold text-foreground font-display">{report.id}</h4>
                       <p className="text-sm text-muted-foreground">
-                        Kit: {report.kitId} • {report.testType}
+                        Sample Code: {report.kitId} • {report.testType}
                       </p>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {score !== null && (

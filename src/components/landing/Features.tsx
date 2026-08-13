@@ -3,28 +3,33 @@ import { Split, FileKey, Shield, UserCheck, Lock, Server } from "lucide-react";
 const features = [
   {
     icon: Split,
-    title: "Native Dissociation",
-    description: "Identity and sample data travel through separate flows. The provider never receives the identity-to-sample association — it is not encrypted or anonymized after the fact.",
+    title: "Two-Phase Architecture",
+    description:
+      "Phase One collects identity and consents on the plaintext channel. Phase Two handles sample and health data on a separate blinded path. Native Dissociation is the property of this separation — not a single processing step.",
   },
   {
     icon: FileKey,
     title: "Consent & Authorization",
-    description: "Privacy consent and informed medical consent travel on the identity channel. Required authorizations are verified before any sample processing is enabled.",
+    description:
+      "Privacy consent and informed medical consent are captured in Phase One. A Validation ID certifies that required authorizations exist before any sample processing is enabled.",
   },
   {
     icon: Shield,
-    title: "Architectural Separation",
-    description: "Labs receive blinded sample codes and validation IDs — not patient identity. Unlinkability is enforced by design, not by post-hoc pseudonymization.",
+    title: "BlindeData Authorization",
+    description:
+      "BlindeData verifies and consumes the Validation ID, blind-signs the payload without seeing Sample Code or health data, and retains no association between the ID and signed content.",
   },
   {
     icon: UserCheck,
-    title: "Authorization Verification",
-    description: "The protocol confirms that required consents are validly provided without revealing the identity-to-sample link. Processing is blocked when authorization is absent.",
+    title: "Lab Signature Verification",
+    description:
+      "The laboratory verifies BlindeData's cryptographic signature on the unblinded signed form — not the Validation ID. Patient identity and Validation ID never enter the lab workflow.",
   },
   {
     icon: Lock,
     title: "Integrity & Authenticity",
-    description: "Cryptographic mechanisms — including blind signatures in the current MVP — support authorization proofs, data integrity, and auditability without exposing identity.",
+    description:
+      "Cryptographic mechanisms — including blind signatures in the current MVP — support authorization proofs, data integrity, and auditability without exposing identity.",
   },
   {
     icon: Server,
@@ -39,10 +44,12 @@ const Features = () => {
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            <span className="text-foreground">Core</span> <span className="text-gradient-primary">Architecture</span>
+            <span className="text-foreground">Core</span>{" "}
+            <span className="text-gradient-primary">Architecture</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Native Dissociation keeps identity and health data on separate paths — with consent verified before processing begins.
+            Two strictly separated phases keep identity and health data on independent paths — with consent verified
+            before processing begins.
           </p>
         </div>
 

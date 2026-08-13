@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-primary" />
-            <span className="font-display font-semibold text-foreground">BlindData</span>
+            <span className="font-display font-semibold text-foreground">BlindeData</span>
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
             <a href="#how-it-works" className="hover:text-primary transition-colors">How it Works</a>
@@ -18,7 +18,7 @@ const Footer = () => {
             <a href="#book-demo" className="hover:text-primary transition-colors">Book a Demo</a>
           </div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} BlindData
+            © {new Date().getFullYear()} BlindeData
           </p>
         </div>
       </div>

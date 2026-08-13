@@ -68,7 +68,7 @@ const SignInDialog = ({ open, onOpenChange }: SignInDialogProps) => {
             Sign In
           </DialogTitle>
           <DialogDescription>
-            Access your BlindData account. Identity and medical data travel through separate flows.
+            Access your BlindeData account. Identity and medical data travel through separate flows.
           </DialogDescription>
         </DialogHeader>
 

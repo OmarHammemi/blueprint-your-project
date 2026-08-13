@@ -1,27 +1,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { User, Building2, ShieldCheck, LogIn, CalendarClock } from "lucide-react";
+import { Link } from "react-router-dom";
 import SignInDialog from "@/components/landing/SignInDialog";
 import BookDemoDialog from "@/components/landing/BookDemoDialog";
 
 const portals = [
   {
     icon: User,
-    title: "Patient Portal",
+    title: "Patient App",
     description:
-      "Register your test kit, provide identity and consents, and track dissociated samples. Retrieve results with charts and health trends — identity never enters the lab workflow.",
+      "Phase One: register and provide consents to receive a Validation ID. Phase Two: submit Sample Code and health data through the blinded flow. Retrieve reports by Sample Code.",
+    link: "/patient",
   },
   {
     icon: Building2,
     title: "Lab Portal",
     description:
-      "Verify authorization for blinded samples, confirm validation IDs, manage pipelines, and upload results — without access to patient identity.",
+      "Receive signed Sample Code submissions with verifiable BlindeData authorization. Verify signatures, match physical samples, process tests, and publish reports — no patient identity or Validation ID.",
+    link: "/lab",
   },
   {
     icon: ShieldCheck,
-    title: "Third Party Service",
+    title: "BlindeData",
     description:
-      "Authorization and verification layer — confirms consent validity, data integrity, and authenticity without seeing medical content or identity-to-sample links.",
+      "Verify and consume Validation IDs, blind-sign payloads without seeing Sample Code or health data, and retain no association between the ID and signed content.",
+    link: "/blindedata",
   },
 ];
 
@@ -37,7 +41,7 @@ const Portals = () => {
             Three <span className="text-gradient-primary">Portals</span>, One Mission
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Each stakeholder has a dedicated interface — patients, labs, and the authorization verification layer.
+            Each stakeholder has a dedicated interface — patients, laboratories, and BlindeData authorization.
           </p>
         </div>
 
@@ -45,7 +49,7 @@ const Portals = () => {
           {portals.map((portal, index) => (
             <div
               key={portal.title}
-              className={`rounded-2xl p-8 bg-card border border-border ${
+              className={`rounded-2xl p-8 bg-card border border-border flex flex-col ${
                 index === 1 ? "border-gradient glow-primary" : ""
               }`}
             >
@@ -53,7 +57,12 @@ const Portals = () => {
                 <portal.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-display text-xl font-semibold mb-3 text-foreground">{portal.title}</h3>
-              <p className="text-muted-foreground">{portal.description}</p>
+              <p className="text-muted-foreground flex-1 mb-6">{portal.description}</p>
+              <Link to={portal.link}>
+                <Button variant="outline" className="w-full">
+                  Open Demo
+                </Button>
+              </Link>
             </div>
           ))}
         </div>

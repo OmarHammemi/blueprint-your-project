@@ -6,8 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/hooks/use-theme";
 import Index from "./pages/Index";
 import ChoosePortal from "./pages/ChoosePortal";
+import RegistrationPortal from "./pages/RegistrationPortal";
 import PatientPortal from "./pages/PatientPortal";
 import LabPortal from "./pages/LabPortal";
+import BlindeDataPortal from "./pages/BlindeDataPortal";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -23,8 +25,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/choose" element={<ChoosePortal />} />
+            <Route path="/registration" element={<RegistrationPortal />} />
             <Route path="/patient" element={<PatientPortal />} />
             <Route path="/lab" element={<LabPortal />} />
+            <Route path="/blindedata" element={<BlindeDataPortal />} />
             <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

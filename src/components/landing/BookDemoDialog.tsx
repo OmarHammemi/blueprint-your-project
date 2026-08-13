@@ -25,7 +25,7 @@ const BookDemoDialog = ({ open, onOpenChange }: BookDemoDialogProps) => {
             Book a Demo
           </DialogTitle>
           <DialogDescription>
-            See Native Dissociation in action — identity, consent, authorization, and blinded lab processing.
+            See the two-phase BlindeData protocol — Phase One registration, BlindeData blind-signing, and authorized lab processing.
           </DialogDescription>
         </DialogHeader>
         {open && (

@@ -16,7 +16,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <Shield className="w-6 h-6 text-primary" />
-            <span className="text-lg font-display font-semibold text-foreground">BlindData</span>
+            <span className="text-lg font-display font-semibold text-foreground">BlindeData</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">

@@ -65,17 +65,17 @@ const Settings = () => {
       <header className="bg-navy text-white sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/choose" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
                 <Shield className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">BlindData</span>
+              <span className="text-xl font-bold">BlindeData</span>
               <Badge className="ml-2 bg-white/20 text-white border-white/30">Settings</Badge>
             </Link>
-            <Link to="/">
+            <Link to="/choose">
               <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
+                Back to Portals
               </Button>
             </Link>
           </div>
@@ -218,7 +218,7 @@ const Settings = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Theme Settings</CardTitle>
-                <CardDescription>Customize how BlindData looks on your device</CardDescription>
+                <CardDescription>Customize how BlindeData looks on your device</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Theme Selection */}
