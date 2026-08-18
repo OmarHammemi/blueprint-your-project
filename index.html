@@ -20,6 +20,19 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Redirect old-style URLs to hash-based URLs
+      (function() {
+        const path = window.location.pathname;
+        const search = window.location.search;
+        const hash = window.location.hash;
+        
+        // If there's a path (not just "/") and no hash, redirect to hash-based URL
+        if (path !== '/' && !hash) {
+          window.location.replace('/#' + path + search);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
