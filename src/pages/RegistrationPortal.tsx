@@ -199,7 +199,7 @@ const RegistrationPortal = () => {
             <div>
               <h4 className="font-semibold text-sm text-foreground font-display mb-1">Separate Environments</h4>
               <p className="text-xs text-muted-foreground">
-                Phase One (this portal) and Phase Two (Patient App) are deliberately separate information flows. The Validation ID is the only element that connects them, and it exists only in Phase One and at BlindeData during authorization — never at the laboratory.
+                Phase One (this portal) and Phase Two (Patient App) are deliberately separate information flows. The Validation ID is issued at the end of Phase One and is used only to authorize the blinded submission through BlindeData. It is never transmitted to the laboratory.
               </p>
             </div>
           </div>

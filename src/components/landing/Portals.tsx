@@ -10,7 +10,7 @@ const portals = [
     icon: User,
     title: "Patient App",
     description:
-      "Phase One: register and provide consents to receive a Validation ID. Phase Two: submit Sample Code and health data through the blinded flow. Retrieve reports by Sample Code.",
+      "Phase Two: use the Validation ID obtained during registration to submit the Sample Code and required health data through the blinded flow, and retrieve reports by Sample Code.",
     link: "/patient",
   },
   {
